@@ -1,8 +1,7 @@
 import CustomersTable from "@/features/customers/table/CustomersTable";
+import { mockCustomers } from "@/features/customers/mock";
 
 export default function Customers() {
-  const data: unknown[] = []; // F14: hier kommen 3 Mockkunden rein
-
   return (
     <div className="space-y-4">
       <div>
@@ -10,7 +9,7 @@ export default function Customers() {
         <p className="text-sm text-muted-foreground">Hier entsteht die Kundenliste.</p>
       </div>
 
-      <CustomersTable data={data} />
+      <CustomersTable data={mockCustomers} />
     </div>
   );
 }

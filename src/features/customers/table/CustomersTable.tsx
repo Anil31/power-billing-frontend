@@ -1,13 +1,13 @@
-type Props = {
-  data: unknown[]; // wird in F14/F15 typisiert
-};
+import { Customer } from "@/features/customers/types";
+
+type Props = { data: Customer[] };
 
 export default function CustomersTable({ data }: Props) {
   return (
     <div className="border rounded-md overflow-hidden">
       <table className="w-full border-collapse">
         <thead>
-          {/* Header nur vorbereitet – Spalten benennen wir erst in F15 */}
+          {/* F15: Header benennen wir im nächsten Schritt korrekt */}
           <tr className="bg-muted/40 text-left border-b">
             <th className="py-2 px-3">Spalte 1</th>
             <th className="py-2 px-3">Spalte 2</th>
@@ -21,7 +21,16 @@ export default function CustomersTable({ data }: Props) {
                 Keine Daten vorhanden
               </td>
             </tr>
-          ) : null /* F14: hier füllen wir dann Zeilen */}
+          ) : (
+            data.map((c) => (
+              <tr key={c.id} className="border-b">
+                {/* Reihenfolge passt schon für F15: Kundennummer, Name, Ort */}
+                <td className="py-2 px-3">{c.customerNo}</td>
+                <td className="py-2 px-3">{c.name}</td>
+                <td className="py-2 px-3">{c.city}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
