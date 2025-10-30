@@ -1,73 +1,93 @@
-# React + TypeScript + Vite
+💻 Power Billing Frontend – React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dieses Projekt ist das Frontend der Anwendung Power Billing, die im Rahmen des SCRUM-Klassenprojekts im Fach Softwaretechnologie & Datenmanagement (SDM) entwickelt wird.
+Das Ziel ist eine moderne Weboberfläche zur Verwaltung von Kunden- und Verbrauchsdaten eines Stromkraftwerks.
 
-Currently, two official plugins are available:
+🧩 Technologien
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+React mit TypeScript – Hauptframework für die Benutzeroberfläche
 
-## React Compiler
+Vite – Entwicklungsumgebung für schnelles Build & Hot Reload
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+TailwindCSS – für das responsive Design
 
-## Expanding the ESLint configuration
+shadcn/ui – für moderne, wiederverwendbare UI-Komponenten
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+React Router – für Seiten-Navigation (z. B. Login, Kunden, Verbrauch)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+fetch/Axios – für die Kommunikation mit dem Backend (REST-API)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+⚙️ Voraussetzungen
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Node.js (Version 18 oder höher)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+npm oder pnpm als Paketmanager
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Ein beliebiger Code-Editor (z. B. Visual Studio Code)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+🚀 Projekt starten
+
+Repository klonen oder lokal herunterladen:
+
+git clone https://github.com/<BENUTZERNAME>/power-billing-frontend.git
+cd power-billing-frontend
+
+
+Abhängigkeiten installieren:
+
+npm install
+
+
+Entwicklungsserver starten:
+
+npm run dev
+
+
+Anwendung im Browser öffnen:
+
+http://localhost:5173
+
+🧱 Projektstruktur
+src/
+├── components/      # Wiederverwendbare UI-Komponenten (z. B. Button, Card)
+├── pages/           # Seiten (Login, Kunden, Verbrauch)
+├── layout/          # AppShell und Grundstruktur
+├── assets/          # Bilder, Logos
+├── App.tsx          # Haupteinstiegspunkt
+└── main.tsx         # React-Root
+
+🎯 Aktueller Stand (Sprint 1)
+
+ Frontend-Projekt erstellt (Vite + React + TypeScript)
+
+ UI-Bibliothek installiert (Tailwind + shadcn/ui)
+
+ Grundlayout (AppShell mit Header/Content)
+
+ Login-Seite (Mockup)
+
+ Kundenliste (Demo-Daten)
+
+📚 Ziel des Projekts
+
+Das Frontend soll eine einfache, übersichtliche Oberfläche bieten, über die:
+
+Kunden angelegt, angezeigt und bearbeitet werden können,
+
+Verbrauchsdaten dargestellt werden,
+
+Abrechnungen als PDF oder Excel exportiert werden.
+
+Die Anwendung wird im Team nach dem SCRUM-Modell entwickelt.
+Das Frontend kommuniziert über eine REST-API mit dem Backend, welches von den Systemintegratoren bereitgestellt wird.
+
+👥 Team
+Rolle	Name	Aufgaben
+Frontend (AE)	[Dein Name]	GUI, Layout, Formulare, API-Anbindung
+Backend (AE)	[Kollege]	Datenbank, API, Berechnungen
+Systemintegration (SI)	[Namen]	Server, Container, Netzwerke
+Kaufmann (KA)	[Name]	Anforderungen, Dokumentation, Präsentation
+🏫 Hinweis für Lehrkräfte
+
+Dieses Repository ist Teil der Projektarbeit IT-25-03 und dient ausschließlich schulischen Zwecken.
+Der Code wird im Unterricht regelmäßig weiterentwickelt und dokumentiert.
