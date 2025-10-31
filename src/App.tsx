@@ -12,8 +12,8 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/customers", element: <Customers /> }, // Altpfad beibehalten
-      { path: "/kunden", element: <Customers /> },    // Neu für AE-F12
+      { path: "/customers", element: <Customers /> }, 
+      { path: "/kunden", element: <Customers /> },    
     ],
   },
 ]);

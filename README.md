@@ -91,3 +91,39 @@ Kaufmann (KA)	[Name]	Anforderungen, Dokumentation, Präsentation
 
 Dieses Repository ist Teil der Projektarbeit IT-25-03 und dient ausschließlich schulischen Zwecken.
 Der Code wird im Unterricht regelmäßig weiterentwickelt und dokumentiert.
+
+Nutzwertanalyse:
+„Wir haben verschiedene Frameworks verglichen und uns bewusst für React mit Vite und TypeScript entschieden,
+weil es für unser Team die beste Kombination aus Geschwindigkeit, Wartbarkeit und Teamtauglichkeit bietet.
+React erlaubt uns eine klare Komponentenstruktur, Vite sorgt für extrem schnelle Entwicklungszyklen,
+und TypeScript schützt uns vor vielen Fehlern und erleichtert die Zusammenarbeit zwischen Frontend und Backend.
+Besonders im SCRUM-Projekt, wo mehrere Auszubildende gleichzeitig am Code arbeiten, war das ein entscheidender Vorteil.“
+
+Gewichtete Auswertung
+Kriterium	Gewicht	React + Vite + TS	Angular	Vue.js	Plain JS
+Entwicklungsgeschwindigkeit	0.15	0.75	0.45	0.60	0.30
+Lernaufwand / Einstieg	0.10	0.40	0.20	0.50	0.30
+Performance	0.15	0.75	0.60	0.60	0.45
+Wartbarkeit / Codequalität	0.20	1.00	0.80	0.80	0.40
+Teamfähigkeit / Zusammenarbeit	0.15	0.75	0.60	0.45	0.15
+Ökosystem / Community	0.10	0.50	0.40	0.40	0.20
+Integration mit Backend	0.15	0.75	0.60	0.60	0.45
+Gesamtwert	1.00	4.90	3.65	3.75	2.25
+ 
+Ergebnis & Begründung
+
+React + Vite + TypeScript erreicht mit 4.9 von 5 Punkten den höchsten Nutzwert.
+
+Begründung:
+
+Durch Vite ist die Entwicklungsumgebung extrem schnell (Hot Reloads in Millisekunden).
+
+React bietet eine komponentenbasierte Architektur, perfekt für die Aufteilung in Module wie Kunden, Anlagen, Wartung usw.
+
+TypeScript erhöht die Codequalität und verhindert viele Integrationsfehler zwischen Frontend und Backend.
+
+Die Trennung in Features und Pages sorgt für eine hohe Wartbarkeit und gute Erweiterbarkeit.
+
+Das System ist leicht auf der VM auszuliefern (statischer Build).
+
+Die Teamarbeit im SCRUM-Kontext profitiert von Typensicherheit, klaren Schnittstellen und schnellem Feedback.
