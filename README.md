@@ -101,6 +101,7 @@ Besonders im SCRUM-Projekt, wo mehrere Auszubildende gleichzeitig am Code arbeit
 
 Gewichtete Auswertung
 Kriterium	Gewicht	React + Vite + TS	Angular	Vue.js	Plain JS
+
 Entwicklungsgeschwindigkeit	0.15	0.75	0.45	0.60	0.30
 Lernaufwand / Einstieg	0.10	0.40	0.20	0.50	0.30
 Performance	0.15	0.75	0.60	0.60	0.45
