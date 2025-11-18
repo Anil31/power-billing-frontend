@@ -3,6 +3,8 @@ import AppShell from "@/components/layout/AppShell";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import Customers from "@/pages/Customers";
+import CustomerDetails from "@/pages/CustomerDetails";
+
 
 const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/login" replace /> },
@@ -12,8 +14,9 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/customers", element: <Customers /> }, 
-      { path: "/kunden", element: <Customers /> },    
+      { path: "/kunden", element: <Customers /> },
+      { path: "/customers", element: <Customers /> }, // kompatibel für Altpfade
+      { path: "/kunden/:id", element: <CustomerDetails /> }, // 🔹 neu: Detailseite
     ],
   },
 ]);

@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom"; 
+import { Button } from "@/components/ui/button";  
 import CustomersTable from "@/features/customers/table/CustomersTable";
 import { mockCustomers } from "@/features/customers/mock";
 
@@ -30,6 +32,10 @@ export default function Customers() {
         />
       </div>
 
+      <Button asChild>
+  <Link to="/kunden/neu">Neuer Kunde</Link>
+</Button>
+
       <CustomersTable data={data} />
       {data.length === 0 && (
         <p className="text-sm italic text-muted-foreground">Keine Treffer.</p>
@@ -37,3 +43,4 @@ export default function Customers() {
     </div>
   );
 }
+
