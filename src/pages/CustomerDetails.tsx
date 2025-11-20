@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { mockCustomers, mockUsage } from "@/features/customers/mock";
+
+import { mockUsage } from "@/features/customers/mock";
 import type { Customer, CustomerUsage } from "@/features/customers/types";
+import {
+  getCustomerById,
+  createCustomer,
+  updateCustomer,
+} from "@/features/customers/api";
 
 interface CustomerFormState {
   name: string;
@@ -28,11 +34,13 @@ const dateFmt = new Intl.DateTimeFormat("de-DE");
 
 export default function CustomerDetails() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
   const isNew = id === "neu";
 
-  const customer: Customer | undefined = !isNew
-    ? mockCustomers.find((c) => c.id === id)
-    : undefined;
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [loadingCustomer, setLoadingCustomer] = useState(!isNew);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const [form, setForm] = useState<CustomerFormState>({
     name: "",
@@ -52,37 +60,48 @@ export default function CustomerDetails() {
   const [activeTab, setActiveTab] = useState<"stammdaten" | "verbrauch">(
     "stammdaten"
   );
-
   const [showBill, setShowBill] = useState(false);
 
-  // Initialwerte laden
+  // 🔄 Kunde laden (nur im Edit-Mode)
   useEffect(() => {
-    if (isNew) {
+    if (isNew || !id) {
+      setCustomer(null);
       setForm({
         name: "",
         address: "",
         email: "",
       });
-    } else if (customer) {
-      setForm({
-        name: customer.name,
-        address: customer.address,
-        email: customer.email,
-      });
+      setLoadingCustomer(false);
+      setLoadError(null);
+      return;
     }
-  }, [customer, isNew]);
 
-  // nur im Edit-Mode ist ein "Kunde nicht gefunden" Fehler
-  if (!isNew && !customer) {
-    return (
-      <div className="space-y-2">
-        <p className="text-red-600 font-semibold">Kunde nicht gefunden.</p>
-        <Link to="/kunden" className="text-sm underline">
-          Zurück zur Kundenliste
-        </Link>
-      </div>
-    );
-  }
+    async function load() {
+      try {
+        setLoadingCustomer(true);
+        setLoadError(null);
+
+        const data = await getCustomerById(id);
+        setCustomer(data);
+        setForm({
+          name: data.name ?? "",
+          address: data.address ?? "",
+          email: data.email ?? "",
+        });
+      } catch (err) {
+        console.error(err);
+        setLoadError(
+          err instanceof Error
+            ? err.message
+            : "Fehler beim Laden des Kunden."
+        );
+      } finally {
+        setLoadingCustomer(false);
+      }
+    }
+
+    load();
+  }, [id, isNew]);
 
   // 🔎 Validierung
   const nameEmpty = form.name.trim() === "";
@@ -120,31 +139,54 @@ export default function CustomerDetails() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // Fehler anzeigen
     setTouched({ name: true, address: true, email: true });
 
     if (!isFormValid || !hasChanges) return;
 
     setIsSaving(true);
 
-    if (isNew) {
-      console.log("[MOCK] Neuen Kunden anlegen:", {
-        ...form,
-      });
-    } else if (customer) {
-      console.log("[MOCK] Kundendaten aktualisieren:", {
-        id: customer.id,
-        ...form,
-      });
+    try {
+      if (isNew) {
+        // ➕ Neuen Kunden anlegen
+        const payload = {
+          customerNo: "",
+          name: form.name.trim(),
+          city: "",
+          address: form.address.trim(),
+          email: form.email.trim(),
+        };
+
+        const created = await createCustomer(payload);
+        setCustomer(created);
+        setLastSaved(new Date());
+
+        // Nach dem Anlegen zur Detailseite des neuen Kunden navigieren
+        navigate(`/kunden/${created.id}`);
+      } else if (customer) {
+        // 💾 Bestehenden Kunden aktualisieren
+        const updated = await updateCustomer(Number(customer.id), {
+          ...customer,
+          name: form.name.trim(),
+          address: form.address.trim(),
+          email: form.email.trim(),
+        });
+
+        setCustomer(updated);
+        setLastSaved(new Date());
+      }
+    } catch (err) {
+      console.error(err);
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Fehler beim Speichern der Kundendaten."
+      );
+    } finally {
+      setIsSaving(false);
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    setIsSaving(false);
-    setLastSaved(new Date());
   }
 
-  // 🔌 Verbrauchsdaten für den aktuellen Kunden
+  // 🔌 Verbrauchsdaten (noch Mock, aber an geladenen Kunden gekoppelt)
   const usageData: CustomerUsage[] = useMemo(() => {
     if (!customer) return [];
     return mockUsage
@@ -159,7 +201,7 @@ export default function CustomerDetails() {
   );
 
   const basePrice = 20; // € Grundpreis (Mock)
-  const pricePerKwh = 0.30; // €/kWh (Mock)
+  const pricePerKwh = 0.3; // €/kWh (Mock)
   const energyCost = totalKwh * pricePerKwh;
   const totalCost = basePrice + energyCost;
 
@@ -178,6 +220,35 @@ export default function CustomerDetails() {
     alert("Export wurde (mock) ausgelöst – Implementierung folgt im Backend.");
   }
 
+  // 🔁 Lade-/Fehlerzustände für bestehenden Kunden
+  if (!isNew && loadingCustomer) {
+    return <p>Lade Kundendaten…</p>;
+  }
+
+  if (!isNew && loadError) {
+    return (
+      <div className="space-y-2">
+        <p className="text-red-600 font-semibold">
+          Fehler beim Laden des Kunden: {loadError}
+        </p>
+        <Link to="/kunden" className="text-sm underline">
+          Zurück zur Kundenliste
+        </Link>
+      </div>
+    );
+  }
+
+  if (!isNew && !customer) {
+    return (
+      <div className="space-y-2">
+        <p className="text-red-600 font-semibold">Kunde nicht gefunden.</p>
+        <Link to="/kunden" className="text-sm underline">
+          Zurück zur Kundenliste
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 max-w-3xl">
       <div className="flex items-center justify-between">
@@ -194,12 +265,12 @@ export default function CustomerDetails() {
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-  <TabsList>
-    <TabsTrigger value="stammdaten">Stammdaten</TabsTrigger>
-    <TabsTrigger value="verbrauch" disabled={isNew}>
-      Verbrauch
-    </TabsTrigger>
-  </TabsList>
+        <TabsList>
+          <TabsTrigger value="stammdaten">Stammdaten</TabsTrigger>
+          <TabsTrigger value="verbrauch" disabled={isNew}>
+            Verbrauch
+          </TabsTrigger>
+        </TabsList>
 
         {/* TAB 1: STAMMDATEN */}
         <TabsContent value="stammdaten">
@@ -272,7 +343,8 @@ export default function CustomerDetails() {
                 />
                 {touched.email && emailInvalid && (
                   <p className="text-xs text-red-600 mt-1">
-                    Bitte eine gültige E-Mail-Adresse eingeben oder leer lassen.
+                    Bitte eine gültige E-Mail-Adresse eingeben oder leer
+                    lassen.
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground mt-1">
@@ -344,9 +416,7 @@ export default function CustomerDetails() {
               </Card>
 
               <div className="flex flex-wrap gap-2">
-                <Button onClick={handleShowBill}>
-                  Abrechnung anzeigen
-                </Button>
+                <Button onClick={handleShowBill}>Abrechnung anzeigen</Button>
                 <Button
                   variant="outline"
                   type="button"
